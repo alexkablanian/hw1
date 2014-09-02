@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -11,7 +12,6 @@ int main (int argc, char *argv[]){
 	
 	//variables for getline and word counter
 	string line;
-	char space = ' ';
 
 	//read in number at top of text document
 	string firstNumber;
@@ -39,7 +39,7 @@ int main (int argc, char *argv[]){
 
 		// check for spaces and up the word counter if a space is detected
 		for (int i = 0; i < stringSize; i++){
-			if (lineArrayFormat[i] == space){
+			if (lineArrayFormat[i] == ' ' || lineArrayFormat[i] == '	'){
 				wordCount ++;
 			}
 		}
