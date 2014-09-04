@@ -11,10 +11,18 @@ int main(int argc, char *argv[]){
 	ifstream myFile;
 	myFile.open(argv[1]);
 
-	string fileName = argv[1]; 
-	string firstLine;
+	//make sure input file is valid
+	if (myFile.is_open()) {
+	}
+	else{
+		cout << "Sorry, invalid file name." << endl;
+		return 0;
+	}	
+
+	//enter error message for if there are two numbers on the first line
 
 	//inputting the first line that contains the number of buckets and the number of lines of commands in the .txt
+	string firstLine;
 	getline(myFile, firstLine);
 	cerr << firstLine << endl;
 
@@ -27,13 +35,6 @@ int main(int argc, char *argv[]){
 	//dynamically allocate an array of pointers with pointers towards numBuckets amount of int arrays
 	int **allMyBuckets = new int* [numBuckets];
 
-	//go through the array of pointers called allMyBuckets and make numBuckets amount of int arrays of variable size 
-	for (int i = 1; i < numBuckets+1; i++){
-		//cerr << "bucket " << i << endl;
-		allMyBuckets[i] = new int[10]; //figure out variable size of each array (default 10 for practice)
-		// initialize all to 0 (i think they are default initialized to 0?)
-	}
-
 	/*an int array to check if a certain bucket is empty or not. when an empty command is run, that buckets
 	location in this array changes from 0 to 1 indicating there is something in the bucket*/
 	int *bucketCheck = NULL;
@@ -43,6 +44,8 @@ int main(int argc, char *argv[]){
 	for (int i = 0 ; i < numBuckets; i ++){
 		bucketCheck[i] = 0;
 	}
+
+	int bucketSize [numBuckets];
 
 	while(!myFile.eof()){
 		//get lines and convert the first few operators to formats that we can use in the program
@@ -61,17 +64,21 @@ int main(int argc, char *argv[]){
 				cout << "Error - bucket " << buckNUM << " is not empty" << endl;
 			}
 			else{
-				for (int i = 0; i< itemNUM; i++){
-					string parse4;
-					iss>>parse4;
-					int placeHolder = atoi (parse4.c_str());
+				//problem here when to deallocate?
+				allMyBuckets[buckNUM] = new int [itemNUM];
+				bucketSize[buckNUM] = itemNUM;
+
+				for (int i = 0; i< bucketSize[buckNUM]; i++){
+					string sequence;
+					iss>>sequence;
+					int placeHolder = atoi (sequence.c_str());
 					allMyBuckets[buckNUM][i] = placeHolder;
 					bucketCheck[buckNUM] = 1;
 				}
 			}
 		}
 		
-		// empty function checks if bucket exists. if it exists it will then go through and empty the bucket
+		//empty function checks if bucket exists. if it exists it will then go through and empty the bucket
 		//empty = set all ints to 0? or null? or what?
 		else if (commandPrompt == "EMPTY"){
 			cout << "EMPTY " <<endl;
@@ -80,8 +87,9 @@ int main(int argc, char *argv[]){
 			}
 			else{
 				//enter empty commands here --> run through an array and set all ints to null?
-				for(int i =0; i < itemNUM; i++){
-					allMyBuckets[buckNUM][i] = 0;
+				for(int i =0; i < bucketSize[buckNUM]; i++){
+					//delete [] allMyBuckets[buckNUM];
+					allMyBuckets[buckNUM]= NULL;
 				}
 				bucketCheck[buckNUM] = 0;
 			}
@@ -98,7 +106,7 @@ int main(int argc, char *argv[]){
 			}
 			else{
 				//output whats in the bucket through a for loop running through the area 
-				for(int i=0; i < 4; i++){ //arbitrarily assigning four at the moment
+				for(int i=0; i < bucketSize[buckNUM]; i++){ 
 					cout << allMyBuckets[buckNUM][i];
 				} 
 				cout << endl;
@@ -111,13 +119,13 @@ int main(int argc, char *argv[]){
 	}
 
 	//for loop to delete allocated memory for arrays of ints
-	/*for (int i = 1; i < numBuckets+1; i++){
+	/*for (int i = 0; i < numBuckets+1; i++){
 		delete [] allMyBuckets[i];
-	}
+	}*/
 	// delete allocated memory for pointers to buckets
 	delete [] allMyBuckets;
 	//delete allocated memory for empty bucket checker
-	delete [] bucketCheck; */
+	delete [] bucketCheck; 
 
 	myFile.close(); 
 	return 0;

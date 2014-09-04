@@ -6,9 +6,18 @@
 using namespace std;
 
 int main (int argc, char *argv[]){
+	
 	//declare ifstream variable and open file
 	ifstream myFile;
 	myFile.open(argv[1]); 
+
+	//make sure input file is valid
+	if (myFile.is_open()) {
+	}
+	else{
+		cout << "Sorry, invalid file name." << endl;
+		return 0;
+	}
 	
 	//variables for getline and word counter
 	string line;
@@ -22,7 +31,7 @@ int main (int argc, char *argv[]){
 
 	//dynamically allocate an array of size numlines to store # of words per line
 	int *reverseOrder = NULL;
-	reverseOrder = new int [numLines];
+	reverseOrder = new int [numLines-1];
 	int lineCount = 0;
 
 	while (!myFile.eof()){
@@ -45,12 +54,12 @@ int main (int argc, char *argv[]){
 		}
 
 		//enter wordcount into dynamic array
-		reverseOrder[lineCount] = wordCount + 1; 
-		lineCount++;
+		reverseOrder[lineCount] = wordCount + 1;
+		lineCount++; 
 	}
 
 	//play word count array in reverse order 
-	for (int i = lineCount -1; i >= 0; i --){
+	for (int i = lineCount-1; i >= 0; i --){
 		cout << reverseOrder[i] << endl;
 	}
 
